@@ -1,0 +1,191 @@
+/* BeatShuffle product site — 2026 redesign */
+:root{
+  --bg:#FBFAFF;
+  --bg-2:#F3F0FF;
+  --text:#15142B;
+  --muted:#5D5B78;
+  --line:rgba(21,20,43,.10);
+  --card:rgba(255,255,255,.72);
+  --card-strong:#FFFFFF;
+  --accent:#9B4DF5;
+  --cyan:#0BB8FF;--blue:#3D6BFF;--purple:#9B4DF5;--pink:#FF3D9A;--orange:#FFB23A;
+  --grad:linear-gradient(100deg,#0BB8FF 0%,#3D6BFF 28%,#9B4DF5 52%,#FF3D9A 78%,#FFB23A 100%);
+  --shadow:0 20px 60px rgba(60,40,140,.14);
+  --radius:28px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+
+/* 言語切替: <html class="ja"> のとき日本語だけ出す */
+[lang-only="ja"]{display:none}
+html.ja [lang-only="en"]{display:none}
+html.ja [lang-only="ja"]{display:revert}
+
+/* ---------- 背景 ---------- */
+#scene{position:fixed;inset:0;width:100vw;height:100vh;z-index:-1;pointer-events:none}
+.aura{position:fixed;inset:-20vmax;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(40vmax 40vmax at 10% 5%,rgba(11,184,255,.22),transparent 60%),
+    radial-gradient(45vmax 45vmax at 95% 40%,rgba(255,61,154,.16),transparent 60%),
+    radial-gradient(40vmax 40vmax at 20% 95%,rgba(155,77,245,.16),transparent 60%),
+    radial-gradient(30vmax 30vmax at 85% 90%,rgba(255,178,58,.14),transparent 60%),
+    var(--bg);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(2vmax,-2vmax,0) rotate(4deg)}}
+.no-webgl #scene{display:none}
+
+/* ---------- ヘッダー ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:20;transition:background .3s,box-shadow .3s}
+header.scrolled{background:rgba(251,250,255,.78);backdrop-filter:saturate(1.6) blur(16px);-webkit-backdrop-filter:saturate(1.6) blur(16px);box-shadow:0 1px 0 var(--line)}
+.nav{max-width:1180px;margin:0 auto;height:68px;padding:0 20px;display:flex;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img.mark{height:26px;width:auto}
+.brand img.word{height:22px;width:auto}
+.nav .spacer{flex:1}
+.nav a.link{font-size:14px;font-weight:700;text-decoration:none;color:var(--muted)}
+.nav a.link:hover{color:var(--text)}
+.lang{display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px}
+.lang button{border:0;background:transparent;color:var(--muted);font:700 12px var(--font);padding:6px 12px;border-radius:999px;cursor:pointer}
+.lang button.on{background:var(--text);color:#fff}
+@media (max-width:720px){.nav a.link{display:none}.brand img.word{height:18px}}
+
+/* ---------- 共通 ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px;position:relative;z-index:2}
+section{position:relative;z-index:2}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  padding:8px 16px;border-radius:999px;background:var(--card);box-shadow:0 4px 20px rgba(60,40,140,.08);backdrop-filter:blur(10px)}
+html.ja .eyebrow{letter-spacing:.04em}
+.eyebrow::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--grad)}
+.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+h1,h2,h3{line-height:1.15;letter-spacing:-.02em;font-weight:900}
+h2{font-size:clamp(34px,5.2vw,64px)}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--muted);max-width:620px}
+
+/* スクロールで現れる */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.1s}.reveal.d2{transition-delay:.2s}.reveal.d3{transition-delay:.3s}
+
+/* ---------- App Store ボタン ---------- */
+.store{display:inline-flex;align-items:center;gap:12px;background:#0B0B12;color:#fff;text-decoration:none;
+  padding:13px 24px 13px 20px;border-radius:16px;box-shadow:0 14px 40px rgba(20,10,60,.25);transition:transform .2s,box-shadow .2s}
+.store:hover{transform:translateY(-2px);box-shadow:0 20px 50px rgba(20,10,60,.32)}
+.store svg{width:28px;height:28px;fill:#fff}
+.store small{display:block;font-size:11px;opacity:.8;line-height:1.1}
+.store b{display:block;font-size:21px;line-height:1.1;letter-spacing:-.01em}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;padding:14px 22px;border-radius:16px;
+  background:var(--card);border:1px solid var(--line);backdrop-filter:blur(10px)}
+
+/* ---------- ヒーロー ---------- */
+.hero{min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:110px 0 80px}
+.hero .wrap{width:100%}
+.hero-copy{max-width:640px}
+.hero h1{font-size:clamp(44px,7vw,92px);margin:22px 0 22px}
+html.ja .hero h1{font-size:clamp(38px,5.4vw,76px)}
+html.ja h2{font-size:clamp(30px,4.4vw,56px)}
+.hero .lead{margin-bottom:34px}
+.hero .cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.hero .note{margin-top:18px;font-size:13px;color:var(--muted)}
+.scroll-hint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:26px;height:42px;border:2px solid var(--line);border-radius:14px;z-index:2}
+.scroll-hint::after{content:"";position:absolute;left:50%;top:8px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:var(--text);animation:hint 1.6s ease-in-out infinite}
+@keyframes hint{0%{opacity:0;transform:translateY(0)}40%{opacity:1}100%{opacity:0;transform:translateY(14px)}}
+@media (max-width:860px){
+  .hero{align-items:flex-end;padding-top:52vh}
+  .hero-copy{max-width:none}
+}
+
+/* ---------- ビート・マーキー ---------- */
+.marquee{overflow:hidden;padding:26px 0;border-block:1px solid var(--line);background:rgba(255,255,255,.5);backdrop-filter:blur(8px)}
+.marquee .track{display:flex;gap:48px;width:max-content;animation:marq 38s linear infinite}
+.marquee span{font-size:clamp(22px,3vw,34px);font-weight:900;white-space:nowrap;letter-spacing:-.02em}
+.marquee span:nth-child(even){color:transparent;-webkit-text-stroke:1.5px var(--text);opacity:.5}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ---------- ステップ ---------- */
+.steps{padding:130px 0 60px}
+.steps .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:54px}
+.step{background:var(--card);border:1px solid rgba(255,255,255,.8);border-radius:var(--radius);padding:34px 30px;box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.step .num{font-size:15px;font-weight:900;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;background:var(--grad);margin-bottom:22px}
+.step h3{font-size:24px;margin-bottom:10px}
+.step p{color:var(--muted);font-size:15.5px}
+@media (max-width:860px){.steps .grid{grid-template-columns:1fr}}
+
+/* ---------- 機能（端末＋説明） ---------- */
+.feature{padding:110px 0}
+.feature .row{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
+.feature.flip .row{grid-template-columns:.95fr 1.05fr}
+.feature.flip .text{order:2}
+.feature .text h2{margin:20px 0 22px}
+.feature ul{list-style:none;margin-top:28px;display:grid;gap:14px}
+.feature li{display:flex;gap:14px;align-items:flex-start;font-weight:600}
+.feature li::before{content:"";flex:none;width:22px;height:22px;margin-top:3px;border-radius:7px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 12.5l3 3 7-7' stroke='white' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat,var(--grad)}
+.stage{position:relative;display:flex;justify-content:center;perspective:1400px}
+.phone{position:relative;width:min(330px,70vw);border-radius:54px;padding:11px;background:#0E0E14;
+  box-shadow:0 40px 90px rgba(40,20,90,.30),inset 0 0 0 2px #2A2A35;transform-style:preserve-3d;transition:transform .2s ease-out}
+.phone img{border-radius:44px;width:100%}
+.phone::after{content:"";position:absolute;top:22px;left:50%;width:31%;height:26px;margin-left:-15.5%;border-radius:16px;background:#000}
+.phone.back{position:absolute;width:min(280px,58vw);left:4%;top:12%;transform:rotate(-8deg);opacity:.95;z-index:-1}
+.phone.land{width:min(600px,90vw);border-radius:46px;padding:10px}
+.phone.land img{border-radius:37px}
+.phone.land::after{top:50%;left:18px;width:24px;height:30%;margin:-15% 0 0 0}
+@media (max-width:860px){
+  .feature .row,.feature.flip .row{grid-template-columns:1fr;gap:50px}
+  .feature.flip .text{order:0}
+}
+
+/* ---------- テーマ ---------- */
+.themes{padding:120px 0}
+.swatches{display:flex;flex-wrap:wrap;gap:14px;margin:34px 0 10px}
+.swatch{width:56px;height:56px;border-radius:50%;border:0;cursor:pointer;position:relative;box-shadow:0 8px 24px rgba(0,0,0,.12);transition:transform .2s}
+.swatch:hover{transform:scale(1.08)}
+.swatch.on::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:3px solid var(--sw)}
+.swatch-name{font-weight:800;color:var(--accent);min-height:1.7em}
+.skins{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;margin-top:40px}
+.skin{border-radius:20px;aspect-ratio:3/4.4;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;box-shadow:var(--shadow);transition:transform .3s}
+.skin:hover{transform:translateY(-6px) rotate(-1.5deg)}
+.skin b{font-size:14px}
+.skin small{font-size:11px;opacity:.75;line-height:1.35}
+.skin .dot{width:28px;height:28px;border-radius:50%;margin-bottom:auto}
+@media (max-width:860px){.skins{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:520px){.skins{grid-template-columns:repeat(3,1fr)}}
+
+/* ---------- 料金 ---------- */
+.pricing{padding:120px 0}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:50px}
+.plan{background:var(--card);border-radius:var(--radius);padding:34px 30px;box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.8);backdrop-filter:blur(18px)}
+.plan .tag{font-size:13px;font-weight:800;color:var(--accent)}
+.plan h3{font-size:30px;margin:8px 0 12px}
+.plan p{color:var(--muted);font-size:15.5px}
+.plan.hi{background:linear-gradient(var(--card-strong),var(--card-strong)) padding-box,var(--grad) border-box;border:2px solid transparent}
+@media (max-width:860px){.plans{grid-template-columns:1fr}}
+
+/* ---------- FAQ ---------- */
+.faq{padding:100px 0}
+.faq details{background:var(--card);border-radius:22px;padding:22px 26px;margin-top:14px;box-shadow:0 6px 24px rgba(60,40,140,.07);border:1px solid rgba(255,255,255,.8)}
+.faq summary{cursor:pointer;font-weight:800;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:20px}
+.faq summary::after{content:"+";font-size:22px;line-height:1;color:var(--accent);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin-top:12px;color:var(--muted)}
+
+/* ---------- CTA / フッター ---------- */
+.final{padding:140px 0 120px;text-align:center}
+.final img.mark{width:120px;margin:0 auto 26px;animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}12%{transform:scale(1.1)}}
+.final h2{margin-bottom:18px}
+.final .lead{margin:0 auto 34px}
+footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:34px 0 40px;font-size:14px;color:var(--muted);background:rgba(255,255,255,.55);backdrop-filter:blur(10px)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center}
+footer a{text-decoration:none;font-weight:700}
+footer a:hover{color:var(--text)}
+footer .spacer{flex:1}
+
+@media (prefers-reduced-motion:reduce){
+  .aura,.marquee .track,.final img.mark,.scroll-hint::after{animation:none}
+  .reveal{opacity:1;transform:none;transition:none}
+}
+@media (max-width:860px){#themeRow{grid-template-columns:1fr!important}}
